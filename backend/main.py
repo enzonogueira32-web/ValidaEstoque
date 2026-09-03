@@ -4,13 +4,11 @@ from sqlalchemy.orm import Session
 from .database import engine, Base
 from . import models
 from .schemas import ProdutoCreate
-from .regras import verificar_status
+from .regras import verificar_status, precisa_comprar
 
 app = FastAPI(title="ValidaEstoque")
 
-
 Base.metadata.create_all(bind=engine)
-
 
 def get_db():
     db = Session(bind=engine)
@@ -20,13 +18,11 @@ def get_db():
     finally:
         db.close()
 
-
 @app.get("/")
 def inicio():
     return {
         "mensagem": "API da validação do estoque funcionando!"
     }
-
 
 @app.post("/produtos")
 def criar_produto(
@@ -53,20 +49,44 @@ def listar_produtos(db: Session = Depends(get_db)):
     produtos = db.query(models.Produto).all()
 
     resultado = []
-
+    
     for produto in produtos:
         resultado.append({
-            "id": produto.id,
-            "nome": produto.nome,
-            "categoria": produto.categoria,
-            "quantidade": produto.quantidade,
-            "quantidade_minima": produto.quantidade_minima,
-            "data_validade": produto.data_validade,
-            "preco": produto.preco,
-            "status": verificar_status(produto.data_validade)
-        })
+        "id": produto.id,
+        "nome": produto.nome,
+        "categoria": produto.categoria,
+        "quantidade": produto.quantidade,
+        "quantidade_minima": produto.quantidade_minima,
+        "data_validade": produto.data_validade,
+        "preco": produto.preco,
+        "status": verificar_status(produto.data_validade),
+        "precisa_comprar": precisa_comprar(
+            produto.quantidade,
+            produto.quantidade_minima
+    )
+})
 
     return resultado
+
+@app.get("/lista-compras")
+def lista_compras(db: Session = Depends(get_db)):
+    produtos = db.query(models.Produto).all()
+
+    lista = []
+
+    for produto in produtos:
+        if precisa_comprar(
+            produto.quantidade,
+            produto.quantidade_minima
+        ):
+            lista.append({
+                "id": produto.id,
+                "nome": produto.nome,
+                "quantidade": produto.quantidade,
+                "quantidade_minima": produto.quantidade_minima
+            })
+
+    return lista
 
 @app.get("/produtos/{produto_id}")
 def buscar_produto(produto_id: int, db: Session = Depends(get_db)):
