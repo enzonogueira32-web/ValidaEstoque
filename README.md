@@ -1,221 +1,274 @@
 # ValidaEstoque
 
-# ValidaEstoque
+Sistema de gerenciamento e controle de estoque desenvolvido com **Python**, **FastAPI**, **SQLAlchemy** e **SQLite**.
 
-Sistema de controle de estoque feito em Python. A ideia é facilitar o controle de produtos, principalmente em relação à validade e à quantidade disponível.
+O ValidaEstoque permite cadastrar produtos, acompanhar seus níveis de estoque, verificar datas de validade e gerar relatórios para auxiliar no controle e na tomada de decisões.
 
-> Em desenvolvimento
+## Funcionalidades
 
-## Sobre o projeto
+* Cadastro de produtos
+* Listagem de produtos
+* Consulta individual de produtos
+* Edição de produtos
+* Exclusão de produtos
+* Controle de quantidade mínima em estoque
+* Identificação de produtos com estoque baixo
+* Verificação automática da validade dos produtos
+* Identificação de produtos vencidos
+* Identificação de produtos próximos do vencimento
+* Cálculo do valor total do estoque
+* Cálculo de possíveis prejuízos com produtos vencidos
+* Geração de lista de compras
+* Dashboard com indicadores do estoque
 
-O ValidaEstoque foi criado para ajudar no controle de produtos em estoque.
+## Tecnologias utilizadas
 
-O sistema vai permitir cadastrar produtos, acompanhar suas quantidades e datas de validade e avisar quando algo estiver perto de vencer ou precisar ser comprado novamente.
-
-A ideia também é evitar desperdícios e facilitar o controle do estoque no dia a dia.
-
-## Tecnologias
-
-* Python
-* FastAPI
-* SQLAlchemy
-* SQLite
-* Pydantic
-* Uvicorn
-* Swagger
+* **Python 3.14+**
+* **FastAPI** — criação da API e do backend
+* **SQLAlchemy** — comunicação com o banco de dados
+* **SQLite** — banco de dados
+* **HTML5**
+* **CSS3**
+* **JavaScript**
+* **Uvicorn** — servidor da aplicação
 
 ## Estrutura do projeto
 
 ```text
 ValidaEstoque/
 │
+├── backend/
+│   ├── __init__.py
+│   ├── database.py
+│   ├── index.html
+│   ├── main.py
+│   ├── models.py
+│   ├── regras.py
+│   ├── schemas.py
+│   │
+│   └── templates/
+│       └── index.html
+│
+├── validaestoque/
+│
 ├── database.db
 │
-└── backend/
-    ├── __init__.py
-    ├── main.py
-    ├── database.py
-    ├── models.py
-    ├── regras.py
-    └── schemas.py
+└── README.md
 ```
 
-### O que cada arquivo faz
+> Dependendo da configuração utilizada, o `index.html` pode estar diretamente dentro de `backend` ou na pasta `backend/templates`.
 
-**main.py**
-É onde fica a API e os endpoints do sistema.
+## Principais arquivos
 
-**database.py**
-Faz a configuração do banco de dados.
+### `main.py`
 
-**models.py**
-Define como os produtos são armazenados no banco.
+Arquivo principal da aplicação.
 
-**schemas.py**
-Define os dados que podem ser enviados para a API e faz a validação deles.
+Responsável por:
 
-**regras.py**
-Contém algumas regras do sistema, como verificar a validade e se o estoque precisa ser reposto.
+* Inicializar o FastAPI
+* Criar as tabelas do banco
+* Disponibilizar as rotas da API
+* Realizar as operações de CRUD
+* Gerar relatórios
+* Disponibilizar o dashboard
 
-**database.db**
-É o banco de dados SQLite usado pelo projeto.
+### `database.py`
 
-## O que já foi feito
+Responsável pela configuração da conexão com o banco de dados SQLite e pela criação da base SQLAlchemy.
 
-### CRUD de produtos
+### `models.py`
 
-A API já permite:
+Define os modelos utilizados no banco de dados, incluindo o modelo de produto.
 
-| Método | Endpoint         | O que faz           |
-| ------ | ---------------- | ------------------- |
-| POST   | `/produtos`      | Cadastra um produto |
-| GET    | `/produtos`      | Lista os produtos   |
-| GET    | `/produtos/{id}` | Busca um produto    |
-| PUT    | `/produtos/{id}` | Atualiza um produto |
-| DELETE | `/produtos/{id}` | Exclui um produto   |
+### `schemas.py`
 
-### Controle de validade
+Define os schemas utilizados para validação dos dados recebidos pela API.
 
-O projeto já possui uma função que verifica a data de validade do produto.
+### `regras.py`
 
-Ela classifica os produtos em:
+Contém as regras de negócio do sistema, como:
+
+* Verificação da validade
+* Identificação de produtos próximos do vencimento
+* Verificação de estoque abaixo do mínimo
+
+### `index.html`
+
+Interface visual do sistema, permitindo ao usuário visualizar e administrar os produtos.
+
+## API
+
+O sistema possui as seguintes principais rotas:
+
+| Método   | Rota                       | Função                                       |
+| -------- | -------------------------- | -------------------------------------------- |
+| `GET`    | `/`                        | Abre a interface do sistema                  |
+| `POST`   | `/produtos`                | Cadastra um produto                          |
+| `GET`    | `/produtos`                | Lista todos os produtos                      |
+| `GET`    | `/produtos/{id}`           | Consulta um produto                          |
+| `PUT`    | `/produtos/{id}`           | Atualiza um produto                          |
+| `DELETE` | `/produtos/{id}`           | Exclui um produto                            |
+| `GET`    | `/lista-compras`           | Lista produtos que precisam ser comprados    |
+| `GET`    | `/relatorio/vencidos`      | Relatório de produtos vencidos               |
+| `GET`    | `/relatorio/vencendo`      | Relatório de produtos próximos do vencimento |
+| `GET`    | `/relatorio/estoque-baixo` | Relatório de estoque baixo                   |
+| `GET`    | `/dashboard`               | Indicadores gerais do estoque                |
+| `GET`    | `/resumo`                  | Resumo geral do estoque                      |
+
+## Dados dos produtos
+
+Cada produto possui informações como:
+
+* Nome
+* Categoria
+* Quantidade atual
+* Quantidade mínima
+* Data de validade
+* Preço
+
+O sistema utiliza essas informações para realizar automaticamente os cálculos e classificações.
+
+## Regras de estoque
+
+Um produto é considerado com **estoque baixo** quando sua quantidade atual é menor ou igual à quantidade mínima configurada.
+
+Quando isso acontece, o sistema calcula automaticamente a quantidade necessária para atingir novamente o estoque mínimo.
 
 ```text
-vencido
-vence_em_breve
-seguro
+Quantidade a comprar =
+Quantidade mínima - Quantidade atual
 ```
 
-A ideia é usar isso posteriormente no dashboard para facilitar a visualização do estoque.
+## Regras de validade
 
-### Estoque mínimo
+O sistema verifica automaticamente a data de validade de cada produto.
 
-Também existe uma regra para verificar quando um produto precisa ser comprado novamente.
+Os produtos podem ser classificados como:
 
-A lógica atual é:
+* **Vencido**
+* **Vence em breve**
+* **Seguro**
 
-```text
-quantidade <= quantidade_minima
+Essa classificação é utilizada no dashboard e nos relatórios.
+
+## Dashboard
+
+O dashboard apresenta informações gerais do estoque, incluindo:
+
+* Total de produtos
+* Produtos vencidos
+* Produtos próximos do vencimento
+* Produtos seguros
+* Produtos com estoque baixo
+* Prejuízo estimado com produtos vencidos
+
+## Como executar o projeto
+
+### 1. Clonar ou baixar o projeto
+
+Baixe o projeto e abra o terminal na pasta principal:
+
+```powershell
+cd C:\Users\Nogueira\Downloads\ValidaEstoque
 ```
 
-Quando isso acontecer, o produto poderá entrar automaticamente na lista de compras.
+### 2. Instalar as dependências
 
-## Como executar
+Execute:
 
-Primeiro, instale as dependências:
-
-```bash
-pip install fastapi uvicorn sqlalchemy pydantic
+```powershell
+pip install fastapi uvicorn sqlalchemy
 ```
 
-Depois, na pasta principal do projeto, execute:
+### 3. Iniciar o servidor
 
-```bash
+Execute:
+
+```powershell
 python -m uvicorn backend.main:app --reload
 ```
 
-No Windows, também pode ser necessário usar o caminho completo do Python:
-
-```powershell
-& "CAMINHO_DO_PYTHON" -m uvicorn backend.main:app --reload
-```
-
-Depois de iniciar o servidor, a API estará disponível em:
+Se estiver tudo correto, o servidor ficará disponível em:
 
 ```text
-http://127.0.0.1:8000/
+http://127.0.0.1:8000
 ```
 
-A documentação para testar a API fica em:
+### 4. Acessar o sistema
+
+Abra no navegador:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Documentação da API
+
+O FastAPI disponibiliza automaticamente uma documentação interativa.
+
+### Swagger UI
+
+Acesse:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-## Exemplo de cadastro
+### ReDoc
 
-Para cadastrar um produto usando `POST /produtos`:
-
-```json
-{
-  "nome": "Leite",
-  "categoria": "Laticínios",
-  "quantidade": 10,
-  "quantidade_minima": 5,
-  "data_validade": "2026-09-10",
-  "preco": 5.0
-}
-```
-
-## Próximos passos
-
-### Sistema
-
-* [x] Criar banco de dados
-* [x] Criar modelo de produto
-* [x] Criar validação dos dados
-* [x] Cadastrar produtos
-* [x] Listar produtos
-* [x] Buscar produto por ID
-* [x] Atualizar produto
-* [x] Excluir produto
-* [x] Criar regra de validade
-* [ ] Mostrar o status de validade na API
-* [ ] Criar lista de compras automática
-* [ ] Criar relatório de produtos vencidos
-* [ ] Calcular dinheiro perdido com produtos vencidos
-* [ ] Criar histórico
-
-### Interface
-
-* [ ] Criar dashboard
-* [ ] Criar tela de cadastro
-* [ ] Criar tabela de produtos
-* [ ] Mostrar produtos vencidos
-* [ ] Mostrar produtos próximos do vencimento
-* [ ] Mostrar produtos com estoque baixo
-* [ ] Criar lista de compras
-* [ ] Adicionar gráficos
-
-### Futuramente
-
-* [ ] Login de usuários
-* [ ] PostgreSQL
-* [ ] Notificações por Telegram
-* [ ] Notificações por e-mail
-* [ ] Leitura de código de barras
-* [ ] Consulta de produtos por API
-* [ ] Sistema FEFO
-* [ ] Deploy
-
-## Ideia principal
-
-O objetivo do projeto é ir além de um simples CRUD.
-
-A ideia é que o sistema consiga analisar o estoque e ajudar a tomar decisões, como:
+Também é possível utilizar:
 
 ```text
-Produto perto de vencer
-        ↓
-Identificar automaticamente
-        ↓
-Priorizar utilização
-        ↓
-Evitar desperdício
+http://127.0.0.1:8000/redoc
 ```
 
-E:
+Essas páginas permitem visualizar e testar as rotas da API diretamente pelo navegador.
+
+## Banco de dados
+
+O projeto utiliza **SQLite**, com o arquivo:
 
 ```text
-Estoque abaixo do mínimo
-        ↓
-Identificar automaticamente
-        ↓
-Adicionar à lista de compras
+database.db
 ```
 
-## Sobre o projeto
+As tabelas são criadas automaticamente pelo SQLAlchemy quando a aplicação é iniciada.
 
-Esse projeto está sendo desenvolvido para praticar programação e aprender, na prática, conceitos como Python, APIs, bancos de dados, backend e organização de projetos.
+## CRUD
 
-A ideia é continuar evoluindo o ValidaEstoque até chegar a um sistema completo que possa ser usado como projeto de portfólio.
+O sistema implementa as quatro operações básicas de gerenciamento:
+
+**Create**
+
+Cadastro de novos produtos.
+
+**Read**
+
+Consulta e listagem dos produtos.
+
+**Update**
+
+Atualização dos dados de produtos existentes.
+
+**Delete**
+
+Exclusão de produtos.
+
+## Objetivo do projeto
+
+O ValidaEstoque foi desenvolvido com o objetivo de criar uma solução simples para gerenciamento de estoque, automatizando tarefas como acompanhamento de quantidades, controle de validade, identificação de produtos que precisam ser repostos e geração de indicadores.
+
+O projeto também demonstra a utilização prática de uma arquitetura baseada em **API REST**, banco de dados e interface web.
+
+## Status do projeto
+
+🚧 **Em desenvolvimento**
+
+As funcionalidades principais de gerenciamento de produtos, controle de estoque, validade, dashboard e relatórios já estão implementadas.
+
+## Autor
+
+**Enzo Nogueira**
+
+Projeto desenvolvido para fins de aprendizado e aplicação prática de desenvolvimento de software.
