@@ -262,11 +262,6 @@ O ValidaEstoque foi desenvolvido com o objetivo de criar uma solução simples p
 O projeto também demonstra a utilização prática de uma arquitetura baseada em **API REST**, banco de dados e interface web.
 
 ## Status do projeto
-
-🚧 **Em desenvolvimento**
-
-As funcionalidades principais de gerenciamento de produtos, controle de estoque, validade, dashboard e relatórios já estão implementadas.
-
 ## Autor
 
 **Enzo Nogueira**
