@@ -267,3 +267,14 @@ O projeto também demonstra a utilização prática de uma arquitetura baseada e
 **Enzo Nogueira**
 
 Projeto desenvolvido para fins de aprendizado e aplicação prática de desenvolvimento de software.
+
+
+
+
+
+
+
+
+<img width="1658" height="867" alt="Captura de tela 2026-10-01 134903" src="https://github.com/user-attachments/assets/dd8bdad6-bc5b-4cdc-92d5-e19ff10e523c" />
+<img width="1653" height="871" alt="Captura de tela 2026-10-01 134850" src="https://github.com/user-attachments/assets/959d321f-4cbd-446b-ba83-60ef1822c031" />
+
